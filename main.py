@@ -16,9 +16,8 @@ backup_devimgs = [
 
 # TODO command line argument parsing to populate these!
 
-print("""You are using: 7902 (put cheesy ASCII here)               
-- by @greysoh, @kyolinedev et al.
-- special thanks to @kyolinedev for testing purposes
+print("""ADBackup
+- by @kyolinedev, @greysoh et al.
 """)
 
 print("Please wait while I initialize backups...")
