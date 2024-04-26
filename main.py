@@ -52,8 +52,9 @@ run(["adb", "shell", "setprop", "ctl.stop", "media"])
 run(["adb", "shell", "setprop", "ctl.stop", "zygote"])
 run(["adb", "shell", "setprop", "ctl.stop", "bootanim"])
 
-run(["adb", "shell", "echo s > /proc/sysrq-trigger"])
-run(["adb", "shell", "echo u > /proc/sysrq-trigger"])
+if getenv("ANDROID_RO"):
+    run(["adb", "shell", "echo s > /proc/sysrq-trigger"])
+    run(["adb", "shell", "echo u > /proc/sysrq-trigger"])
 
 print("Backing up file system entries")
 
@@ -72,6 +73,11 @@ for fstab_entry in parsed_fstab_file:
 
 if not getenv("DEBUG"):
     print("Cleaning up")
-    run(["adb", "shell", "reboot"])
+    run(["adb", "shell", "setprop", "ctl.start", "bootanim"])
+    run(["adb", "shell", "setprop", "ctl.start", "zygote"])
+    run(["adb", "shell", "setprop", "ctl.start", "media"])
+
+    if getenv("ANDROID_RO"):
+        run(["adb", "reboot"])
 
 print("Done!")
