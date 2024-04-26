@@ -66,11 +66,11 @@ for fstab_entry in parsed_fstab_file:
     backup_file = f"{dir_name}/{fstab_entry['friendly_name']}.tar.gz"
     
     with open(backup_file, "wb") as file:
+        # TODO: hacky!
         if getenv("SHOW_STDERR"):
-            run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file) # stdout=file
+            run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file)
         else:
-            # hacky
-            run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file, stderr=DEVNULL) # stdout=file
+            run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file, stderr=DEVNULL)
 
 if not getenv("DEBUG"):
     print("Cleaning up")
