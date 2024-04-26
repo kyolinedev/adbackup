@@ -5,12 +5,15 @@ from sys import argv
 
 print("""ADBackup (Restore)
 - by @kyolinedev, @greysoh et al.
-      
+
 THIS CODE IS UNTESTED, PLEASE REPORT ANY ISSUES.
 """)
 
 backup_dir = argv[1]
 backup_dir_contents = listdir(backup_dir)
+
+if "system.tar.gz" in backup_dir_contents:
+    backup_dir_contents.insert(len(backup_dir_contents), backup_dir_contents.pop(backup_dir_contents.index("system.tar.gz")))
 
 print("Please wait while I initialize backups...")
 
