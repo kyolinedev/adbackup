@@ -17,7 +17,7 @@ backup_devimgs = [
 
 # TODO command line argument parsing to populate these!
 
-print("""ADBackup
+print("""ADBackup (Backup)
 - by @kyolinedev, @greysoh et al.
 """)
 
