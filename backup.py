@@ -1,25 +1,37 @@
 from subprocess import PIPE, DEVNULL, run
 from datetime import datetime
 from os import mkdir, getenv
+import argparse
 
 from android_flavored_fstab import parse_fstab_file
 
-backup_partitions = [
-    "data",
-    "system"
-]
-
-# TODO implement this sometime!
-# TODO implement backup restore procedure
-backup_devimgs = [
-    "boot"
-]
-
-# TODO command line argument parsing to populate these!
+default_backup_partitions = ["data", "system"]
+default_backup_devimgs = []
 
 print("""ADBackup (Backup)
 - by @kyolinedev, @greysoh et al.
 """)
+
+parser = argparse.ArgumentParser(description="Backs up your Android phone, NANDroid style")
+
+# Define optional arguments to customize backup
+parser.add_argument(
+    "--partitions", nargs="+", default=default_backup_partitions, 
+    help="Specify the partitions to backup (default: data, system)"
+)
+
+parser.add_argument(
+    "--devimgs", nargs="+", default=default_backup_devimgs, 
+    help="Specify the ABSOLUTE PATH TO device images to backup (default: none)"
+)
+
+args = parser.parse_args()
+
+# Append user-specified partitions and device images to the default lists
+backup_partitions = default_backup_partitions + args.partitions
+backup_devimgs = default_backup_devimgs + args.devimgs
+
+print(backup_partitions)
 
 print("Please wait while I initialize backups...")
 
@@ -71,6 +83,18 @@ for fstab_entry in parsed_fstab_file:
             run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file)
         else:
             run(["adb", "shell", "tar", "-czv", fstab_entry["mountpoint"]], stdout=file, stderr=DEVNULL)
+
+for devimg in backup_devimgs:
+    friendly_name = devimg[devimg.rindex("/")+1:len(devimg)]
+    backup_file = f"{dir_name}/{friendly_name}.img"
+
+    print(f" - Dumping device image '{friendly_name}'...")
+
+    with open(backup_file, "wb") as file:
+        if getenv("SHOW_STDERR"):
+            run(["adb", "shell", "dd", f"if={devimg}"], stdout=file)
+        else:
+            run(["adb", "shell", "dd", f"if={devimg}"], stdout=file, stderr=DEVNULL)
 
 if not getenv("DEBUG"):
     print("Cleaning up")
