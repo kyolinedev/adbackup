@@ -31,8 +31,6 @@ args = parser.parse_args()
 backup_partitions = default_backup_partitions + args.partitions
 backup_devimgs = default_backup_devimgs + args.devimgs
 
-print(backup_partitions)
-
 print("Please wait while I initialize backups...")
 
 try:
