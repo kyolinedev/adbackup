@@ -5,7 +5,8 @@ from os import mkdir, getenv
 from android_flavored_fstab import parse_fstab_file
 
 backup_partitions = [
-    "data"
+    "data",
+    "system"
 ]
 
 # TODO implement this sometime!
@@ -46,12 +47,13 @@ with open(f"{dir_name}/fstab", "w") as file:
 
 parsed_fstab_file = parse_fstab_file(fstab_file)
 
-print("Making the device read only")
+print("Bringing the device down")
 run(["adb", "shell", "setprop", "ctl.stop", "media"])
 run(["adb", "shell", "setprop", "ctl.stop", "zygote"])
 run(["adb", "shell", "setprop", "ctl.stop", "bootanim"])
 
 if getenv("ANDROID_RO"):
+    print("Making file system read only")
     run(["adb", "shell", "echo s > /proc/sysrq-trigger"])
     run(["adb", "shell", "echo u > /proc/sysrq-trigger"])
 
