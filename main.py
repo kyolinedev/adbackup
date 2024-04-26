@@ -1,5 +1,5 @@
-from datetime import datetime
 from subprocess import PIPE, DEVNULL, run
+from datetime import datetime
 from os import mkdir, getenv
 
 from android_flavored_fstab import parse_fstab_file
